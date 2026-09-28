@@ -199,8 +199,15 @@ const navToggle = $('#navToggle');
 const navLinks = $('#navLinks');
 const progress = $('#scrollProgress');
 
+/* El nav arranca transparente sobre el hero oscuro y se vuelve solido al
+   scrollear. Asi, en movil, la barra de direcciones del navegador puede
+   tapar la parte superior sin tapar nada visible. Con el menu abierto
+   queda solido siempre, porque el overlay es claro. */
+let menuOpen = false;
+const syncNavState = () => nav.classList.toggle('is-stuck', menuOpen || scrollY > 40);
+
 const onScroll = () => {
-  nav.classList.toggle('is-stuck', scrollY > 40);
+  syncNavState();
   const max = document.documentElement.scrollHeight - innerHeight;
   progress.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
 };
@@ -208,17 +215,20 @@ addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
 const closeMenu = () => {
+  menuOpen = false;
   navLinks.classList.remove('is-open');
   navToggle.setAttribute('aria-expanded', 'false');
   navToggle.setAttribute('aria-label', 'Abrir menú');
   document.body.style.overflow = '';
+  syncNavState();
 };
 
 navToggle.addEventListener('click', () => {
-  const open = navLinks.classList.toggle('is-open');
-  navToggle.setAttribute('aria-expanded', String(open));
-  navToggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
-  document.body.style.overflow = open ? 'hidden' : '';
+  menuOpen = navLinks.classList.toggle('is-open');
+  navToggle.setAttribute('aria-expanded', String(menuOpen));
+  navToggle.setAttribute('aria-label', menuOpen ? 'Cerrar menú' : 'Abrir menú');
+  document.body.style.overflow = menuOpen ? 'hidden' : '';
+  syncNavState();
 });
 
 navLinks.addEventListener('click', e => { if (e.target.tagName === 'A') closeMenu(); });

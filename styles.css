@@ -1,10 +1,10 @@
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   BARBERÃA â€” hoja de estilos
-   Mobile first Â· sin dependencias
-   Paleta: crema / verde profundo / coral / Ã¡mbar
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ============================================================
+   BARBERIA - hoja de estilos
+   Mobile first / sin dependencias
+   Paleta: crema / verde profundo / coral / ambar
+   ============================================================ */
 
-/* â”€â”€ Tokens â”€â”€ */
+/* --- Tokens --- */
 :root{
   /* superficies */
   --paper:     #f7f2ea;
@@ -38,15 +38,20 @@
   --ease:      cubic-bezier(.22,1,.36,1);
   --ease-out:  cubic-bezier(.16,1,.3,1);
 
-  --nav-h: 76px;
+  /* En móvil la barra de direcciones del navegador (y el notch) se montan
+     sobre la parte superior del viewport. Como el nav es position:fixed
+     quedaecutado debajo. --safe-top lo baja lo justo para despejarla. */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --nav-h: 78px;
+  --nav-total: calc(var(--nav-h) + var(--safe-top));
 }
 
-/* â”€â”€ Reset â”€â”€ */
+/* --- Reset --- */
 *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
 
 html{
   scroll-behavior:smooth;
-  scroll-padding-top:calc(var(--nav-h) + 14px);
+  scroll-padding-top:calc(var(--nav-total) + 16px);
   -webkit-text-size-adjust:100%;
 }
 
@@ -74,7 +79,7 @@ code{
 }
 ::selection{ background:var(--coral); color:#fff; }
 
-/* â”€â”€ Layout â”€â”€ */
+/* --- Layout --- */
 .wrap{ width:min(100% - 2.5rem, var(--wrap)); margin-inline:auto; }
 .section{ padding:clamp(4.5rem,11vw,8.5rem) 0; position:relative; }
 .section--paper{ background:var(--paper); color:var(--ink); }
@@ -83,7 +88,7 @@ code{
   --line:var(--line-d); --cream-mute:#a3bfbb;
 }
 
-/* â•â•â• Barra de progreso â•â•â• */
+/* --- Barra de progreso --- */
 .scroll-progress{
   position:fixed; inset:0 auto auto 0; height:4px; width:100%;
   transform:scaleX(0); transform-origin:0 50%; z-index:200;
@@ -91,27 +96,58 @@ code{
   will-change:transform;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• NAV â€” centrado â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== NAV - centrado ==== */
+/* ******************************************************************
+   NAV - dos estados
+   - Arriba (scrollY 0): transparente, se funde con el hero oscuro.
+     Esto resuelve el problema de movil: en Safari y Chrome la barra de
+     direcciones del navegador tapa la parte superior del viewport, y como
+     el nav es position:fixed queda cortado. Si arriba es invisible, lo
+     que tape la barra no molesta. Ademas, al scrollear la barra del
+     navegador se retira y el nav solido queda a la vista.
+   - Scroleado (.is-stuck): solido, con blur y borde.
+   Los colores viven en custom properties para no duplicar reglas.
+   ***************************************************************** */
 .nav{
-  position:fixed; inset:0 0 auto 0; z-index:100; height:var(--nav-h);
-  display:flex; align-items:center;
-  transition:background .4s var(--ease), backdrop-filter .4s, height .4s var(--ease), box-shadow .4s;
-  background:color-mix(in srgb, var(--paper) 80%, transparent);
-  backdrop-filter:blur(12px) saturate(1.2);
-  -webkit-backdrop-filter:blur(12px) saturate(1.2);
+  /* estado sobre hero oscuro */
+  --nav-fg:      var(--cream);
+  --nav-fg-soft: color-mix(in srgb, var(--cream) 74%, transparent);
+  --nav-line:    color-mix(in srgb, var(--cream) 42%, transparent);
+  --nav-tint:    color-mix(in srgb, var(--cream) 10%, transparent);
+  --nav-bg:      transparent;
+  --nav-blur:    blur(0px);
+
+  position:fixed; inset:0 0 auto 0; z-index:100;
+  height:var(--nav-total);              /* el alto real incluye el safe area */
+  padding-top:var(--safe-top);          /* baja el contenido por debajo de la barra del navegador */
+  display:flex; align-items:flex-end;
+  background:var(--nav-bg);
+  backdrop-filter:var(--nav-blur);
+  -webkit-backdrop-filter:var(--nav-blur);
   border-bottom:1px solid transparent;
+  transition:
+    background .4s var(--ease),
+    backdrop-filter .4s var(--ease),
+    box-shadow .4s var(--ease),
+    border-color .4s var(--ease);
 }
 .nav.is-stuck{
-  height:64px;
-  background:color-mix(in srgb, var(--paper) 94%, transparent);
+  /* estado sobre fondo claro */
+  --nav-fg:      var(--deep);
+  --nav-fg-soft: var(--ink-mute);
+  --nav-line:    color-mix(in srgb, var(--teal) 30%, transparent);
+  --nav-tint:    color-mix(in srgb, var(--teal) 8%, transparent);
+  --nav-bg:      color-mix(in srgb, var(--paper) 92%, transparent);
+  --nav-blur:    blur(12px) saturate(1.2);
+
   box-shadow:0 8px 30px -18px rgba(16,57,58,.5);
   border-bottom-color:var(--line);
 }
 
-/* 3 columnas iguales: marca | links | acciÃ³n.
-   Con 1fr auto 1fr las columnas laterales miden igual, asÃ­ el bloque
+/* 3 columnas iguales: marca | links | acción.
+   Con 1fr auto 1fr las columnas laterales miden igual, así el bloque
    central queda EXACTAMENTE al medio. Con `auto 1fr auto` se descentraba
-   segÃºn cuÃ¡nto ocupa el logo. */
+   según cuánto ocupa el logo. */
 .nav__inner{
   width:min(100% - 2.5rem, var(--wrap)); margin-inline:auto;
   display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:1rem;
@@ -120,7 +156,8 @@ code{
 .brand{ grid-column:1; display:flex; align-items:center; gap:.55rem; justify-self:start; }
 .brand__text{
   font-family:'Bebas Neue',sans-serif; font-size:1.55rem;
-  letter-spacing:.05em; text-transform:uppercase; color:var(--deep);
+  letter-spacing:.05em; text-transform:uppercase;
+  color:var(--nav-fg); transition:color .4s var(--ease);
 }
 .brand__pole{
   width:15px; height:15px; border-radius:50%; flex:none;
@@ -137,39 +174,53 @@ code{
 /* links SIEMPRE centrados */
 .nav__links{
   grid-column:2; justify-self:center; justify-content:center;
-  display:none; gap:clamp(.9rem,2.2vw,2rem); margin-inline:auto;
+  display:none; gap:clamp(.9rem,2vw,1.9rem); margin-inline:auto;
 }
 .nav__links a{
   font-size:.8rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--ink-mute); position:relative; padding:.4rem 0; transition:color .3s;
+  color:var(--nav-fg-soft); position:relative; padding:.4rem 0;
+  transition:color .4s var(--ease);
 }
 .nav__links a::after{
   content:''; position:absolute; left:0; bottom:0; height:2px; width:100%;
   border-radius:2px; background:linear-gradient(90deg,var(--coral),var(--amber));
   transform:scaleX(0); transform-origin:100% 50%; transition:transform .45s var(--ease);
 }
-.nav__links a:hover{ color:var(--deep); }
+.nav__links a:hover{ color:var(--nav-fg); }
 .nav__links a:hover::after{ transform:scaleX(1); transform-origin:0 50%; }
 
-.nav__cta{ grid-column:3; justify-self:end; display:none; }
+.nav__cta{ grid-column:3; justify-self:end; display:none; --fg:var(--nav-fg); --bd:var(--nav-line); }
 .nav__toggle{
   grid-column:3; justify-self:end;
   width:44px; height:44px; display:grid; place-content:center; gap:5px; flex:none;
-  border:1.5px solid color-mix(in srgb,var(--teal) 30%,transparent); border-radius:50%;
-  background:color-mix(in srgb,var(--teal) 8%,transparent);
+  border:1.5px solid var(--nav-line); border-radius:50%;
+  background:var(--nav-tint);
+  transition:border-color .4s var(--ease), background .4s var(--ease);
 }
 .nav__toggle span{
-  display:block; width:18px; height:2px; border-radius:2px; background:var(--deep);
-  transition:transform .4s var(--ease), opacity .25s;
+  display:block; width:18px; height:2px; border-radius:2px;
+  background:var(--nav-fg);
+  transition:transform .4s var(--ease), opacity .25s, background .4s var(--ease);
 }
 .nav__toggle[aria-expanded="true"] span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
 .nav__toggle[aria-expanded="true"] span:nth-child(2){ opacity:0; }
 .nav__toggle[aria-expanded="true"] span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
 
-/* Overlay mÃ³vil */
+/* Overlay movil */
 .nav__links.is-open{
   display:flex; flex-direction:column; gap:0;
-  position:fixed; inset:var(--nav-h) 0 auto 0;
+  /* Ancho explicito a proposito. Con `inset:... 0 auto 0` y width:auto el
+     panel queda sujeto al containing block, y como .nav__links es grid item
+     de la columna `auto`, Chrome usa el area de grid como containing block:
+     midia 148px (el ancho del texto) en vez de pantalla completa.
+     width:100vw anula esa restriccion; left:50% + margin-left:-50vw lo
+     centra respecto de la pantalla. */
+  position:fixed;
+  top:var(--nav-total);
+  left:50%;
+  right:auto;
+  width:100vw;
+  margin-left:-50vw;
   background:var(--paper); border-bottom:1px solid var(--line);
   padding:.5rem 1.25rem 1.5rem; box-shadow:0 30px 60px -30px rgba(16,57,58,.4);
   animation:fadeDown .35s var(--ease);
@@ -188,7 +239,7 @@ code{
   .nav__cta{ display:inline-flex; }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• BOTONES â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== BOTONES ==== */
 .btn{
   --bg:transparent; --fg:var(--deep); --bd:color-mix(in srgb,var(--teal) 32%,transparent);
   position:relative; display:inline-flex; align-items:center; justify-content:center;
@@ -213,10 +264,10 @@ code{
 .btn--primary::before{ background:linear-gradient(115deg,var(--amber),var(--coral)); }
 .btn--ghost{ --bg:color-mix(in srgb,var(--teal) 7%,transparent); }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• HERO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== HERO ==== */
 .hero{
   position:relative; min-height:100svh; display:flex; align-items:center;
-  padding:calc(var(--nav-h) + 3.5rem) 0 6.5rem; overflow:hidden;
+  padding:calc(var(--nav-total) + 3.5rem) 0 6.5rem; overflow:hidden;
   background:linear-gradient(165deg, var(--deep) 0%, var(--deep-2) 55%, #0d3436 100%);
   color:var(--cream);
 }
@@ -302,7 +353,7 @@ code{
 @keyframes scrollDot{ 0%{transform:translateY(-6px);opacity:0} 40%{opacity:1} 100%{transform:translateY(14px);opacity:0} }
 @media (min-width:1060px){ .hero__pole{ display:block; } }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• MARQUEE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== MARQUEE ==== */
 .marquee{
   overflow:hidden; padding:1rem 0;
   background:linear-gradient(90deg,var(--coral),var(--amber) 50%,var(--teal));
@@ -316,7 +367,7 @@ code{
 .marquee__track i{ color:color-mix(in srgb,#10393a 45%,transparent); font-style:normal; }
 @keyframes slide{ to{ transform:translateX(-50%); } }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• HEADERS DE SECCIÃ“N â€” centrados â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== HEADERS DE SECCION - centrados ==== */
 .sec-head{ text-align:center; max-width:60ch; margin:0 auto clamp(2.8rem,6vw,4.5rem); }
 .sec-head__kicker{
   display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.24em;
@@ -347,7 +398,7 @@ code{
 .sec-cta__note{ margin-top:1.1rem; font-size:.92rem; color:var(--ink-mute); }
 .section--deep .sec-cta__note{ color:var(--cream-mute); }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• CARDS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== CARDS ==== */
 .grid{ display:grid; gap:1.1rem; }
 @media (min-width:680px){ .grid--3{ grid-template-columns:repeat(2,1fr); } }
 @media (min-width:1000px){ .grid--3{ grid-template-columns:repeat(3,1fr); } }
@@ -405,7 +456,7 @@ code{
 }
 .card__time{ font-size:.8rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-mute); }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• HISTORIA â€” centrada â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== HISTORIA - centrada ==== */
 .hist{ max-width:820px; margin-inline:auto; }
 .hist__body{
   display:grid; gap:1.2rem; max-width:var(--read); margin:0 auto 3.2rem;
@@ -465,7 +516,7 @@ code{
 .tl__title{ font-size:1.12rem; font-weight:700; color:var(--cream); margin-bottom:.35rem; }
 .tl__desc{ color:var(--cream-mute); font-size:1rem; font-weight:300; max-width:52ch; }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• RESEÃ‘AS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== RESENAS ==== */
 .gscore{
   display:inline-flex; align-items:center; gap:1.2rem; flex-wrap:wrap; justify-content:center;
   margin-top:1.5rem; padding:.95rem 1.5rem; border-radius:100px;
@@ -554,7 +605,7 @@ code{
 
 .rev__foot{ display:flex; flex-wrap:wrap; gap:.85rem; justify-content:center; margin-top:1.8rem; }
 
-/* Estado vacÃ­o */
+/* Estado vacio */
 .rev__empty{
   display:grid; justify-items:center; text-align:center; gap:1rem;
   padding:clamp(2.2rem,6vw,3.4rem) 1.5rem; border-radius:var(--r);
@@ -574,7 +625,7 @@ code{
   .rev__card{ flex-basis:390px; }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• GALERÃA â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== GALERIA ==== */
 .gal{ display:grid; grid-template-columns:repeat(2,1fr); gap:.85rem; }
 @media (min-width:820px){ .gal{ grid-template-columns:repeat(4,1fr); grid-auto-rows:185px; } .ph--tall{ grid-row:span 2; } }
 @media (max-width:819px){ .ph--tall{ grid-column:span 2; aspect-ratio:16/10; } }
@@ -598,7 +649,7 @@ code{
   background:linear-gradient(transparent, color-mix(in srgb,var(--deep-2) 88%,transparent));
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• VISITANOS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== VISITANOS ==== */
 .visit{ display:grid; gap:clamp(2.5rem,6vw,3.5rem); max-width:1060px; margin-inline:auto; }
 @media (min-width:980px){ .visit{ grid-template-columns:1fr 1fr; align-items:center; } }
 
@@ -637,7 +688,7 @@ code{
     #fffdfa;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• CTA FINAL â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== CTA FINAL ==== */
 .cta{
   position:relative; padding:clamp(5rem,13vw,9rem) 0; overflow:hidden; text-align:center;
   background:linear-gradient(140deg,var(--deep) 0%,var(--teal) 55%,var(--coral) 160%);
@@ -656,7 +707,7 @@ code{
 }
 .cta__sub{ color:color-mix(in srgb,var(--cream) 82%,transparent); max-width:44ch; margin:0 auto 2.4rem; font-weight:300; }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• FOOTER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== FOOTER ==== */
 .foot{ border-top:1px solid var(--line); background:var(--paper-2); padding:3.2rem 0 2rem; }
 .foot__inner{ display:grid; gap:1.8rem; justify-items:center; text-align:center; }
 @media (min-width:760px){ .foot__inner{ grid-template-columns:1fr auto; align-items:center; justify-items:start; text-align:left; } }
@@ -668,7 +719,7 @@ code{
 .foot__nav a:hover{ color:var(--coral); }
 .foot__copy{ font-size:.73rem; color:var(--ink-mute); grid-column:1/-1; padding-top:1.5rem; border-top:1px solid var(--line); text-align:center; }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• FAB WHATSAPP â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== FAB WHATSAPP ==== */
 .fab{
   position:fixed; right:16px; bottom:16px; z-index:90;
   display:grid; place-items:center; width:60px; height:60px; border-radius:50%;
@@ -684,7 +735,7 @@ code{
 @keyframes ring{ 0%{transform:scale(1);opacity:.7} 70%,100%{transform:scale(1.75);opacity:0} }
 @media (min-width:760px){ .fab{ right:28px; bottom:28px; width:66px; height:66px; } }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• REVEAL â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==== REVEAL ==== */
 .reveal{ opacity:0; transform:translateY(30px); transition:opacity .85s var(--ease-out), transform .85s var(--ease-out); }
 .reveal.is-in{ opacity:1; transform:none; }
 .reveal[data-delay="1"]{ transition-delay:.09s; }
