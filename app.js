@@ -199,15 +199,22 @@ const navToggle = $('#navToggle');
 const navLinks = $('#navLinks');
 const progress = $('#scrollProgress');
 
-/* El nav arranca transparente sobre el hero oscuro y se vuelve solido al
-   scrollear. Asi, en movil, la barra de direcciones del navegador puede
-   tapar la parte superior sin tapar nada visible. Con el menu abierto
-   queda solido siempre, porque el overlay es claro. */
+/* El nav es solido en todos los estados (contraste legible siempre) y en
+   movil va en flujo, asi que se va al scrollear. El shadow sube al
+   scrollear, con el menu abierto o no. */
 let menuOpen = false;
 const syncNavState = () => nav.classList.toggle('is-stuck', menuOpen || scrollY > 40);
 
+/* En movil el nav esta en flujo: si el usuario esta scrolleado y abre el
+   menu, el panel tiene que caer debajo del nav donde ESTE, no a 78px del
+   tope del viewport. Se mide el borde inferior real al abrir. */
+const positionMenu = () => {
+  nav.style.setProperty('--menu-top', `${nav.getBoundingClientRect().bottom}px`);
+};
+
 const onScroll = () => {
   syncNavState();
+  if (menuOpen) positionMenu();
   const max = document.documentElement.scrollHeight - innerHeight;
   progress.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
 };
@@ -228,6 +235,7 @@ navToggle.addEventListener('click', () => {
   navToggle.setAttribute('aria-expanded', String(menuOpen));
   navToggle.setAttribute('aria-label', menuOpen ? 'Cerrar menú' : 'Abrir menú');
   document.body.style.overflow = menuOpen ? 'hidden' : '';
+  if (menuOpen) positionMenu();
   syncNavState();
 });
 

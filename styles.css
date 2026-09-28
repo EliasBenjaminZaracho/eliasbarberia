@@ -51,7 +51,10 @@
 
 html{
   scroll-behavior:smooth;
-  scroll-padding-top:calc(var(--nav-total) + 16px);
+  /* En movil el nav esta en flujo y se va al scrollear, asi que los anclajes
+     no necesitan resignar espacio. El offset grande va solo en escritorio,
+     dentro del @media de 920px. */
+  scroll-padding-top:16px;
   -webkit-text-size-adjust:100%;
 }
 
@@ -98,51 +101,44 @@ code{
 
 /* ==== NAV - centrado ==== */
 /* ******************************************************************
-   NAV - dos estados
-   - Arriba (scrollY 0): transparente, se funde con el hero oscuro.
-     Esto resuelve el problema de movil: en Safari y Chrome la barra de
-     direcciones del navegador tapa la parte superior del viewport, y como
-     el nav es position:fixed queda cortado. Si arriba es invisible, lo
-     que tape la barra no molesta. Ademas, al scrollear la barra del
-     navegador se retira y el nav solido queda a la vista.
-   - Scroleado (.is-stuck): solido, con blur y borde.
-   Los colores viven en custom properties para no duplicar reglas.
+   NAV - siempre solido.
+   Antes arrancaba transparente sobre el hero oscuro y se volvia solido al
+   scrollear. Se descarto por dos motivos medidos:
+   - Contraste: el boton del header heredaba --nav-fg (crema) sobre el
+     gradiente coral = 2.4:1, ilegible. Un nav solido con texto oscuro
+     funciona en los dos estados y no depende de donde este el scroll.
+   - Movil: un position:fixed arriba choca con la barra de direcciones, que
+     se monta sobre el viewport. En movil el nav va EN FLUJO y se va al
+     scrollear, asi no hay nada que la barra pueda tapar.
+   - Scroleado (.is-stuck): solo sube la sombra.
    ***************************************************************** */
 .nav{
-  /* estado sobre hero oscuro */
-  --nav-fg:      var(--cream);
-  --nav-fg-soft: color-mix(in srgb, var(--cream) 74%, transparent);
-  --nav-line:    color-mix(in srgb, var(--cream) 42%, transparent);
-  --nav-tint:    color-mix(in srgb, var(--cream) 10%, transparent);
-  --nav-bg:      transparent;
-  --nav-blur:    blur(0px);
+  --nav-fg:      var(--deep);
+  /* #5c7270 daba 4.14:1 sobre el crema del nav, por debajo del 4.5:1 que
+     pide WCAG AA. Este tono sube a 6.7:1 y conserva algo de jerarquia
+     frente a la marca (10.2:1). */
+  --nav-fg-soft: #3f5251;
+  /* Borde del boton hamburguesa. Con teal al 30% daba 1.92:1 y el circulo
+     casi no se veía; WCAG 1.4.11 pide 3:1 para el contorno de un control.
+     Teal solido sobre crema = 3.75:1. */
+  --nav-line:    var(--teal);
+  --nav-tint:    color-mix(in srgb, var(--teal) 12%, transparent);
+  --nav-bg:      color-mix(in srgb, var(--paper) 94%, transparent);
+  --nav-blur:    blur(12px) saturate(1.2);
 
-  position:fixed; inset:0 0 auto 0; z-index:100;
-  height:var(--nav-total);              /* el alto real incluye el safe area */
-  padding-top:var(--safe-top);          /* baja el contenido por debajo de la barra del navegador */
+  position:relative;                   /* movil: en flujo, se va al scrollear */
+  z-index:100;
+  height:var(--nav-total);             /* el alto real incluye el safe area */
+  padding-top:var(--safe-top);
   display:flex; align-items:flex-end;
   background:var(--nav-bg);
   backdrop-filter:var(--nav-blur);
   -webkit-backdrop-filter:var(--nav-blur);
-  border-bottom:1px solid transparent;
-  transition:
-    background .4s var(--ease),
-    backdrop-filter .4s var(--ease),
-    box-shadow .4s var(--ease),
-    border-color .4s var(--ease);
+  border-bottom:1px solid var(--line);
+  box-shadow:0 10px 30px -22px rgba(16,57,58,.5);
+  transition:box-shadow .4s var(--ease);
 }
-.nav.is-stuck{
-  /* estado sobre fondo claro */
-  --nav-fg:      var(--deep);
-  --nav-fg-soft: var(--ink-mute);
-  --nav-line:    color-mix(in srgb, var(--teal) 30%, transparent);
-  --nav-tint:    color-mix(in srgb, var(--teal) 8%, transparent);
-  --nav-bg:      color-mix(in srgb, var(--paper) 92%, transparent);
-  --nav-blur:    blur(12px) saturate(1.2);
-
-  box-shadow:0 8px 30px -18px rgba(16,57,58,.5);
-  border-bottom-color:var(--line);
-}
+.nav.is-stuck{ box-shadow:0 12px 34px -16px rgba(16,57,58,.55); }
 
 /* 3 columnas iguales: marca | links | acción.
    Con 1fr auto 1fr las columnas laterales miden igual, así el bloque
@@ -189,7 +185,6 @@ code{
 .nav__links a:hover{ color:var(--nav-fg); }
 .nav__links a:hover::after{ transform:scaleX(1); transform-origin:0 50%; }
 
-.nav__cta{ grid-column:3; justify-self:end; display:none; --fg:var(--nav-fg); --bd:var(--nav-line); }
 .nav__toggle{
   grid-column:3; justify-self:end;
   width:44px; height:44px; display:grid; place-content:center; gap:5px; flex:none;
@@ -214,9 +209,11 @@ code{
      de la columna `auto`, Chrome usa el area de grid como containing block:
      midia 148px (el ancho del texto) en vez de pantalla completa.
      width:100vw anula esa restriccion; left:50% + margin-left:-50vw lo
-     centra respecto de la pantalla. */
+     centra respecto de la pantalla.
+     --menu-top lo calcula app.js con el borde inferior real del nav, para
+     que el panel caiga debajo del nav aunque este en flujo y scrolleado. */
   position:fixed;
-  top:var(--nav-total);
+  top:var(--menu-top, var(--nav-total));
   left:50%;
   right:auto;
   width:100vw;
@@ -234,9 +231,12 @@ code{
 .nav__links.is-open a::after{ display:none; }
 
 @media (min-width:920px){
+  /* En escritorio si puede quedar fijo: la barra de direcciones no existe. */
+  .nav{ position:fixed; inset:0 0 auto 0; }
   .nav__links{ display:flex; }
   .nav__toggle{ display:none; }
-  .nav__cta{ display:inline-flex; }
+  .hero{ padding-top:calc(var(--nav-total) + 3.5rem); }
+  html{ scroll-padding-top:calc(var(--nav-total) + 16px); }
 }
 
 /* ==== BOTONES ==== */
@@ -264,10 +264,25 @@ code{
 .btn--primary::before{ background:linear-gradient(115deg,var(--amber),var(--coral)); }
 .btn--ghost{ --bg:color-mix(in srgb,var(--teal) 7%,transparent); }
 
+/* CTA del header. Necesita MAS especificidad que .btn y .btn--primary, que
+   se declaran mas abajo en esta misma hoja: al tener las tres un solo
+   selector de clase, .btn{--bg:transparent; display:inline-flex} ganaba por
+   orden y dejaba el boton sin fondo, con texto blanco sobre el hero oscuro,
+   y ademas lo hacia visible en movil. Resuelto con .nav .nav__cta.
+   Fondo deep + texto cream = 11:1 de contraste (WCAG AA pide 4.5:1). */
+.nav .nav__cta{
+  grid-column:3; justify-self:end; display:none;
+  --bg:var(--deep); --fg:var(--cream); --bd:transparent;
+}
+.nav .nav__cta::before{ background:linear-gradient(115deg,var(--teal),var(--deep-3)); }
+/* Se muestra solo en escritorio. Va aqui y no en el @media del nav para
+   ganarle por orden al `display:none` de arriba: misma especificidad. */
+@media (min-width:920px){ .nav .nav__cta{ display:inline-flex; } }
+
 /* ==== HERO ==== */
 .hero{
   position:relative; min-height:100svh; display:flex; align-items:center;
-  padding:calc(var(--nav-total) + 3.5rem) 0 6.5rem; overflow:hidden;
+  padding:3.5rem 0 6.5rem; overflow:hidden;
   background:linear-gradient(165deg, var(--deep) 0%, var(--deep-2) 55%, #0d3436 100%);
   color:var(--cream);
 }
