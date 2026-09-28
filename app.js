@@ -50,11 +50,24 @@ const CONFIG = {
     { valor: null, decimals: 1, label: 'Calificación Google' }
   ],
 
-  /* Reseñas de Google — pegá acá las reales que Copies del perfil.
-     Si lo completás, la sección del HTML se reemplaza sola.
-     Con la API key de abajo tiene prioridad la data de Google. */
+  /* Reseñas de Google.
+     ────────────────────────────────────────────────
+     modoDemo: true  → muestra reseñas DE EJEMPLO para poder ver el
+                       diseño funcionando (al presentarla a un cliente).
+                       El sitio lo aclara con un aviso visible.
+    modoDemo: false → usa lo que haya abajo. Poné acá las reseñas
+                      REALES que copies del perfil de Google.
+     ────────────────────────────────────────────────
+     Formato: { autor, texto, fecha, estrellas } */
+  modoDemo: true,
+  ratingDemo: { valor: 4.9, cantidad: 214 },
   resenas: [
-    // { autor: 'Nombre del cliente', texto: 'Texto de la reseña.', fecha: 'Hace 2 meses', estrellas: 5 }
+    { autor: 'Marcos R.',  texto: 'Me hice el corte y el perfilado de barba. Salí del local sintiendo que me habían reparado el día. Vuelvo siempre.',          fecha: 'Hace 3 semanas', estrellas: 5 },
+    { autor: 'Julieta P.', texto: 'La toalla caliente y el afeitado a navaja no tienen comparación. Me tuvieron una paciencia increible con la barba.',        fecha: 'Hace 1 mes',     estrellas: 5 },
+    { autor: 'Damián A.',  texto: 'Llevé a mi hijo de 8 años y lo manejaron con una calma increíble. Salió feliz y yo también.',                                fecha: 'Hace 2 meses',   estrellas: 5 },
+    { autor: 'Gerardo T.', texto: 'Llego sin turno y me atienden igual. Es de los pocos lugares donde te sentís esperado apenas entrás por la puerta.',    fecha: 'Hace 2 meses',   estrellas: 5 },
+    { autor: 'Nico S.',    texto: 'Me guardaron el peinado que le pasé en la foto y quedó exactamente igual. Cuidan los detalles, se nota.',                  fecha: 'Hace 3 meses',   estrellas: 4 },
+    { autor: 'Franco B.',  texto: 'Excelente onda y muy limpios. El único detalle es que a la tarde se llena, así que conviene reservar antes.',                fecha: 'Hace 4 meses',   estrellas: 4 }
   ],
 
   /* Google Places API (opcional). Trae las reseñas solas.
@@ -65,6 +78,17 @@ const CONFIG = {
 
   /* Link a tu perfil de reseñas. Vacío = se arma solo. */
   reviewsUrl: ''
+
+  /* ═══════════════════════════════════════════════════════
+     ALERTAS ANTES DE USAR ESTA PLANTILLA CON UN CLIENTE REAL
+
+     · Las reseñas de arriba son inventadas (modoDemo). No publiques
+       un sitio con reseñas falsas: viola la Ley 24.240 de Defensa
+       del Consumidor y las políticas de Google. Si el local ya tiene
+       reseñas, pegalas reales: se tarda 2 minutos y venden mucho más.
+     · Las imágenes de la galería son ilustraciones, no fotos reales.
+     · Los precios y horarios son de ejemplo: confirmalos siempre.
+     ═══════════════════════════════════════════════════════ */
 };
 /* ───────────────────────────────────────────────────────────────
    FIN CONFIG
@@ -286,12 +310,17 @@ const hueFor = s => {
   return h;
 };
 
-function renderReviews(list) {
+function renderReviews(list, demo = false) {
   if (!list.length) return;                 // queda el estado vacío
+
+  const tag = demo ? '<span class="rev__flag">Ejemplo</span>' : '';
 
   track.innerHTML = list.map(r => `
     <article class="rev__card">
-      <div class="rev__stars">${'★'.repeat(Math.min(5, Math.max(1, r.estrellas || 5)))}</div>
+      <div class="rev__top">
+        <div class="rev__stars">${'★'.repeat(Math.min(5, Math.max(1, r.estrellas || 5)))}</div>
+        ${tag}
+      </div>
       <p class="rev__text">${esc(r.texto)}</p>
       <footer class="rev__by">
         <span class="rev__av" style="--h:${hueFor(r.autor || 'GC')}">${esc(initials(r.autor || 'GC'))}</span>
@@ -300,12 +329,15 @@ function renderReviews(list) {
     </article>
   `).join('');
 
+  const note = $('#demoNote');
+  if (note) note.hidden = !demo;
+
   revEmpty.hidden = true;
   prev.hidden = next.hidden = track.children.length < 2;
   syncNav();
 }
 
-function showRating(rating, count) {
+function showRating(rating, count, demo = false) {
   const n = Number(rating);
   if (!Number.isFinite(n) || n <= 0) return;
   const line = `${n.toFixed(1)} en Google · ${count ? '+' + count + ' reseñas' : 'Reseñas'}`;
@@ -317,7 +349,7 @@ function showRating(rating, count) {
   if (num) { num.hidden = false; num.textContent = n.toFixed(1); }
 
   const cnt = $('[data-slot="gscoreCount"]');
-  if (cnt && count) { cnt.hidden = false; cnt.textContent = `${count} reseñas verificadas`; }
+  if (cnt && count) { cnt.hidden = false; cnt.textContent = demo ? 'reseñas de ejemplo' : `${count} reseñas verificadas`; }
 }
 
 /* Carrusel */
@@ -363,8 +395,20 @@ if (!reduceMotion) {
   start();
 }
 
-/* 1) Reseñas escritas a mano en CONFIG */
-renderReviews(CONFIG.resenas);
+/* 1) Reseñas escritas a mano en CONFIG (de ejemplo si modoDemo está on) */
+renderReviews(CONFIG.resenas, CONFIG.modoDemo);
+
+if (CONFIG.modoDemo) {
+  const heroStars = $('.hero__rating');
+  if (heroStars) {
+    heroStars.innerHTML =
+      '<span class="stars" aria-hidden="true">★★★★★</span>' +
+      '<span class="demo-pill">Ejemplo</span>';
+  }
+  if (CONFIG.ratingDemo) {
+    showRating(CONFIG.ratingDemo.valor, CONFIG.ratingDemo.cantidad, true);
+  }
+}
 
 /* 2) Reseñas reales vía Google Places API (tiene prioridad) */
 async function loadGoogleReviews() {
