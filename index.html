@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Barbería · Corte, Barba y Afeitado a Navaja</title>
+<meta name="description" content="Cortes clásicos, arreglo de barba a navaja y ritual de afeitado. Turnos por WhatsApp.">
+<meta name="theme-color" content="#0b0b0d">
+<meta property="og:title" content="Barbería · Corte, Barba y Afeitado a Navaja">
+<meta property="og:description" content="Cortes clásicos, barba a navaja y ritual de afeitado. Turnos por WhatsApp.">
+<meta property="og:type" content="business.business">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%E2%9D%84%EF%B8%8F</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+<!--
+  PLANTILLA GENÉRICA. No muestra datos inventados: todo lo que
+  depende del negocio real se carga desde CONFIG en app.js.
+  El JSON-LD de Google se genera también desde ahí.
+-->
+</head>
+
+<body>
+
+<!-- ══ Barra de progreso de scroll ══ -->
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+<!-- ══ Nav ══ -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="brand" href="#inicio" aria-label="Inicio">
+      <span class="brand__pole" aria-hidden="true"></span>
+      <span class="brand__text" data-bind="nombre">Barbería</span>
+    </a>
+
+    <nav class="nav__links" id="navLinks" aria-label="Navegación principal">
+      <a href="#inicio">Inicio</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#historia">Nosotros</a>
+      <a href="#resenas">Reseñas</a>
+      <a href="#galeria">Galería</a>
+      <a href="#visitanos">Visitanos</a>
+    </nav>
+
+    <a class="btn btn--sm btn--gold nav__cta" data-wa>Iniciar turno</a>
+
+    <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero" id="inicio">
+  <div class="hero__bg" aria-hidden="true">
+    <div class="hero__grain"></div>
+    <div class="hero__glow hero__glow--a"></div>
+    <div class="hero__glow hero__glow--b"></div>
+  </div>
+
+  <div class="inner">
+    <p class="hero__eyebrow reveal" data-reveal data-bind="heroEyebrow">Barbería · Turnos por WhatsApp</p>
+
+    <h1 class="hero__title">
+      <span class="line"><span class="line__in reveal" data-reveal data-delay="1">El ritual</span></span>
+      <span class="line"><span class="line__in line__in--gold reveal" data-reveal data-delay="2">del buen</span></span>
+      <span class="line"><span class="line__in reveal" data-reveal data-delay="3">afeitado</span></span>
+    </h1>
+
+    <p class="hero__lead reveal" data-reveal data-delay="4">
+      Tijeras, navaja y espuma caliente. No regalás un corte,
+      regalás una experiencia.
+    </p>
+
+    <div class="hero__actions reveal" data-reveal data-delay="5">
+      <a class="btn btn--gold" data-wa>Reservar por WhatsApp</a>
+      <a class="btn btn--ghost" href="#servicios">Ver servicios</a>
+    </div>
+
+    <div class="hero__meta reveal" data-reveal data-delay="6">
+      <div class="hero__rating">
+        <span class="stars" aria-hidden="true">★★★★★</span>
+        <span class="js-only" data-slot="ratingLine" hidden></span>
+        <span>Reseñas de Google</span>
+      </div>
+      <div class="hero__hours" data-bind="horariosHero">Mar a Sáb · 10:00 — 20:30</div>
+    </div>
+  </div>
+
+  <div class="hero__pole" aria-hidden="true">
+    <div class="pole"><div class="pole__stripes"></div></div>
+  </div>
+
+  <a class="hero__scroll" href="#servicios" aria-label="Bajar a servicios">
+    <span class="hero__scroll-line"></span>
+  </a>
+</section>
+
+<!-- ══ Marquee ══ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track" data-bind="marquee">
+    <span>Corte Clásico</span><i>·</i><span>Barba a Navaja</span><i>·</i><span>Afeitado Italiano</span><i>·</i><span>Ritual de Barba</span><i>·</i><span>Perfilado de Cejas</span><i>·</i>
+    <span>Corte Clásico</span><i>·</i><span>Barba a Navaja</span><i>·</i><span>Afeitado Italiano</span><i>·</i><span>Ritual de Barba</span><i>·</i><span>Perfilado de Cejas</span><i>·</i>
+  </div>
+</div>
+
+<!-- ══════════════ SERVICIOS ══════════════ -->
+<section class="section" id="servicios">
+  <div class="wrap">
+    <header class="sec-head reveal" data-reveal>
+      <span class="sec-head__kicker">La carta</span>
+      <h2 class="sec-head__title">Servicios</h2>
+      <p class="sec-head__sub">Precios orientativos. Confirmamos todo por WhatsApp antes de tu turno.</p>
+    </header>
+
+    <!-- EDITAR: duplicá un <article class="card"> para agregar o quitar un servicio. -->
+    <div class="grid grid--3" data-bind="servicios">
+
+      <article class="card reveal" data-reveal>
+        <span class="card__num">01</span>
+        <h3 class="card__title">Corte clásico</h3>
+        <p class="card__desc">Consulta, lavado, corte a tijera o máquina y peinado con producto premium. Terminaciones a navaja.</p>
+        <ul class="card__list">
+          <li>Lavado + Hidratación</li>
+          <li>Terminaciones a navaja</li>
+          <li>Peinado</li>
+        </ul>
+        <div class="card__foot">
+          <span class="card__price">$28.000</span>
+          <span class="card__time">45 min</span>
+        </div>
+      </article>
+
+      <article class="card card--feat reveal" data-reveal data-delay="1">
+        <span class="card__flag">Más pedido</span>
+        <span class="card__num">02</span>
+        <h3 class="card__title">Corte + ritual de barba</h3>
+        <p class="card__desc">El combo completo. Toalla caliente, perfilado a navaja, aceite y bálsamo.</p>
+        <ul class="card__list">
+          <li>Corte de cabello</li>
+          <li>Toalla caliente + navaja</li>
+          <li>Perfilado de cejas</li>
+        </ul>
+        <div class="card__foot">
+          <span class="card__price">$39.000</span>
+          <span class="card__time">75 min</span>
+        </div>
+      </article>
+
+      <article class="card reveal" data-reveal data-delay="2">
+        <span class="card__num">03</span>
+        <h3 class="card__title">Afeitado tradicional</h3>
+        <p class="card__desc">Toalla caliente, aceite pre-afeitado, navaja libre y piedra pómez. El ritual completo, sin apuro.</p>
+        <ul class="card__list">
+          <li>Navaja clásica</li>
+          <li>Piedra pómez</li>
+          <li>Alivio post-afeitado</li>
+        </ul>
+        <div class="card__foot">
+          <span class="card__price">$22.000</span>
+          <span class="card__time">40 min</span>
+        </div>
+      </article>
+
+      <article class="card reveal" data-reveal>
+        <span class="card__num">04</span>
+        <h3 class="card__title">Arreglo de barba</h3>
+        <p class="card__desc">Perfilado a navaja, diseño de línea y cuidado de la piel. Sin máquina, sin apuro.</p>
+        <ul class="card__list">
+          <li>Diseño de línea</li>
+          <li>Cuidado de la piel</li>
+        </ul>
+        <div class="card__foot">
+          <span class="card__price">$17.000</span>
+          <span class="card__time">30 min</span>
+        </div>
+      </article>
+
+      <article class="card reveal" data-reveal data-delay="1">
+        <span class="card__num">05</span>
+        <h3 class="card__title">Corte + color</h3>
+        <p class="card__desc">Camuflaje de canas, tapete en la corona o mechones. Diagnóstico y sellado.</p>
+        <ul class="card__list">
+          <li>Diagnóstico de color</li>
+          <li>Aplicación + sellado</li>
+        </ul>
+        <div class="card__foot">
+          <span class="card__price">$45.000</span>
+          <span class="card__time">90 min</span>
+        </div>
+      </article>
+
+      <article class="card reveal" data-reveal data-delay="2">
+        <span class="card__num">06</span>
+        <h3 class="card__title">Corte para niños</h3>
+        <p class="card__desc">Para los más chicos. Mismo oficio, más paciencia, y un alfajor de cortesía.</p>
+        <ul class="card__list">
+          <li>Hasta 10 años</li>
+          <li>Regalo sorpresa</li>
+        </ul>
+        <div class="card__foot">
+          <span class="card__price">$22.000</span>
+          <span class="card__time">40 min</span>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="sec-cta reveal" data-reveal>
+      <a class="btn btn--gold btn--lg" data-wa>Elegir turno por WhatsApp</a>
+      <p class="sec-cta__note">Te respondemos con la disponibilidad real en minutos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ HISTORIA ══════════════ -->
+<section class="section section--alt" id="historia">
+  <div class="wrap">
+    <div class="hist">
+
+      <div class="hist__text">
+        <header class="sec-head sec-head--left reveal" data-reveal>
+          <span class="sec-head__kicker">Nuestra historia</span>
+          <h2 class="sec-head__title">Un banco, una<br>navaja y <em>convicción</em></h2>
+        </header>
+
+        <div class="hist__body">
+          <p class="reveal" data-reveal data-bind="histP1">
+            Editá este párrafo en el HTML con la historia real del local:
+            cuándo abrió, quién lo fundó y qué lo hizo distinto.
+          </p>
+          <p class="reveal" data-reveal data-delay="1" data-bind="histP2">
+            El criterio del negocio suele ser siempre el mismo: el cliente
+            vuelve por el corte, no por el ruido. Por eso se trabaja con
+            tijera cuando hace falta, navaja cuando tiene que ser y máquina
+            solamente cuando es lo que se pidió.
+          </p>
+          <p class="reveal" data-reveal data-delay="2" data-bind="histP3">
+            El equipo crece poco a poco, sin perder el oficio: cada barbero
+            nuevo aprende la misma forma de trabajar antes de tocar la silla.
+          </p>
+        </div>
+
+        <dl class="stats reveal" data-reveal data-delay="3" id="stats"></dl>
+      </div>
+
+      <!-- EDITAR: los <li class="tl__item"> son etapas de la historia. -->
+      <ol class="tl" id="tl">
+        <li class="tl__item reveal" data-reveal>
+          <span class="tl__dot"></span>
+          <span class="tl__year">Etapa 01</span>
+          <h3 class="tl__title">El primer local</h3>
+          <p class="tl__desc">Poné acá cómo arrancó: cuántos sillones había, en qué calle y qué equipo usaban.</p>
+        </li>
+        <li class="tl__item reveal" data-reveal data-delay="1">
+          <span class="tl__dot"></span>
+          <span class="tl__year">Etapa 02</span>
+          <h3 class="tl__title">Llega el ritual</h3>
+          <p class="tl__desc">Etapa clave: un servicio nuevo, una técnica nueva o el salto de un local a otro.</p>
+        </li>
+        <li class="tl__item reveal" data-reveal data-delay="2">
+          <span class="tl__dot"></span>
+          <span class="tl__year">Etapa 03</span>
+          <h3 class="tl__title">Cambio de generación</h3>
+          <p class="tl__desc">Cuando entra la siguiente camada al oficio y qué se hereda del anterior.</p>
+        </li>
+        <li class="tl__item reveal" data-reveal data-delay="3">
+          <span class="tl__dot"></span>
+          <span class="tl__year">Etapa 04</span>
+          <h3 class="tl__title">El equipo de hoy</h3>
+          <p class="tl__desc">Cuántos barberos son, cómo se reparten los turnos y qué horarios se agregaron.</p>
+        </li>
+        <li class="tl__item reveal" data-reveal data-delay="4">
+          <span class="tl__dot tl__dot--now"></span>
+          <span class="tl__year">Hoy</span>
+          <h3 class="tl__title">Seguimos respondiendo</h3>
+          <p class="tl__desc">Cerrá la historia con lo que sigue: el local de hoy y hacia dónde va.</p>
+        </li>
+      </ol>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ RESEÑAS ══════════════ -->
+<!--
+  Esta sección NO muestra reseñas inventadas.
+  Se llena sola de dos maneras (ver CONFIG en app.js):
+    1) CONFIG.resenas  -> array con las reseñas reales que copies de Google
+    2) Google Places API (placeId + apiKey) -> las trae directo de Google
+  Mientras tanto muestra un estado vacío con el link al perfil de Google.
+-->
+<section class="section" id="resenas">
+  <div class="wrap">
+    <header class="sec-head reveal" data-reveal>
+      <span class="sec-head__kicker">Lo que dicen</span>
+      <h2 class="sec-head__title">Reseñas de Google</h2>
+
+      <div class="gscore">
+        <span class="gscore__num js-only" data-slot="gscoreNum" hidden>—</span>
+        <div class="gscore__meta">
+          <span class="stars stars--lg" aria-hidden="true">★★★★★</span>
+          <span class="gscore__count js-only" data-slot="gscoreCount" hidden></span>
+        </div>
+        <span class="gscore__badge">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-1.3-.2-1.9H12v3.6h5.4a4.6 4.6 0 0 1-2 3v2.4h3.2c1.9-1.7 3-4.2 3-7.1"/><path fill="#34A853" d="M12 22c2.7 0 4.9-.9 6.6-2.4l-3.2-2.4c-.9.6-2 1-3.4 1-2.6 0-4.8-1.7-5.6-4.1H3.1v2.5A10 10 0 0 0 12 22"/><path fill="#FBBC05" d="M6.4 14.1a6 6 0 0 1 0-3.8V7.8H3.1a10 10 0 0 0 0 8.8l3.3-2.5"/><path fill="#EA4335" d="M12 5.8c1.5 0 2.8.5 3.8 1.5l2.8-2.8A10 10 0 0 0 3.1 7.8l3.3 2.5C7.2 7.9 9.4 5.8 12 5.8"/></svg>
+          Google
+        </span>
+      </div>
+    </header>
+
+    <div class="rev">
+      <button class="rev__nav rev__nav--prev" id="revPrev" aria-label="Reseña anterior" hidden>‹</button>
+      <div class="rev__track" id="revTrack" role="region" aria-label="Reseñas de clientes"></div>
+      <button class="rev__nav rev__nav--next" id="revNext" aria-label="Siguiente reseña" hidden>›</button>
+
+      <div class="rev__empty" id="revEmpty">
+        <span class="rev__empty-ic" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.1-.6L12 2.1l2.9 6.5 7.1.6-5.5 4.8 1.7 7z"/></svg>
+        </span>
+        <h3 class="rev__empty-title">Las reseñas se cargan solas</h3>
+        <p class="rev__empty-text">
+          Conectá el <strong>Place ID</strong> del local en <code>app.js</code> y
+          esta sección se completa con las reseñas reales de Google.
+          También podés pegarlas a mano en <code>CONFIG.resenas</code>.
+        </p>
+        <a class="btn btn--ghost" id="revLink" href="#" target="_blank" rel="noopener">
+          <span class="glogo" aria-hidden="true">G</span> Ver el perfil en Google
+        </a>
+      </div>
+    </div>
+
+    <div class="rev__foot reveal" data-reveal>
+      <a class="btn btn--ghost" id="revLinkFoot" href="#" target="_blank" rel="noopener">
+        <span class="glogo" aria-hidden="true">G</span> Dejá tu reseña
+      </a>
+      <a class="btn btn--gold" data-wa>Pedir mi turno</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ GALERÍA ══════════════ -->
+<section class="section section--alt" id="galeria">
+  <div class="wrap">
+    <header class="sec-head reveal" data-reveal>
+      <span class="sec-head__kicker">El trabajo</span>
+      <h2 class="sec-head__title">Galería</h2>
+      <p class="sec-head__sub">Reemplazá estos bloques por fotos reales del local.</p>
+    </header>
+
+    <!-- Para usar fotos reales, reemplazá cada <figure class="ph"> por:
+      <figure class="ph reveal" data-reveal>
+        <img src="foto-1.jpg" alt="Fade a navaja" loading="lazy">
+      </figure>
+    -->
+    <div class="gal">
+      <figure class="ph ph--tall reveal" data-reveal>
+        <span class="ph__lbl">Fade a navaja</span>
+      </figure>
+      <figure class="ph reveal" data-reveal data-delay="1">
+        <span class="ph__lbl">Perfilado de barba</span>
+      </figure>
+      <figure class="ph reveal" data-reveal data-delay="2">
+        <span class="ph__lbl">Toalla caliente</span>
+      </figure>
+      <figure class="ph ph--tall reveal" data-reveal>
+        <span class="ph__lbl">Afeitado clásico</span>
+      </figure>
+      <figure class="ph reveal" data-reveal data-delay="1">
+        <span class="ph__lbl">Corte a tijera</span>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ VISITANOS ══════════════ -->
+<section class="section" id="visitanos">
+  <div class="wrap">
+    <div class="visit">
+
+      <div class="visit__info">
+        <header class="sec-head sec-head--left reveal" data-reveal>
+          <span class="sec-head__kicker">Dónde estamos</span>
+          <h2 class="sec-head__title">Visitanos</h2>
+        </header>
+
+        <div class="info-list">
+          <div class="info reveal" data-reveal>
+            <span class="info__ic">◎</span>
+            <div>
+              <h3>Dirección</h3>
+              <p data-slot="direccion">Cargá la dirección en app.js</p>
+              <a class="link" id="dirLink" href="#" target="_blank" rel="noopener">Cómo llegar →</a>
+            </div>
+          </div>
+
+          <div class="info reveal" data-reveal data-delay="1">
+            <span class="info__ic">✆</span>
+            <div>
+              <h3>WhatsApp</h3>
+              <p data-slot="whatsapp">+54 11 7059-0898</p>
+              <a class="link" data-wa>Escribir ahora →</a>
+            </div>
+          </div>
+
+          <div class="info reveal" data-reveal data-delay="2">
+            <span class="info__ic">◷</span>
+            <div>
+              <h3>Horarios</h3>
+              <table class="hrs" id="horarios"></table>
+            </div>
+          </div>
+        </div>
+
+        <a class="btn btn--gold btn--lg reveal" data-wa data-reveal data-delay="3">Pedir turno</a>
+      </div>
+
+      <div class="visit__map reveal" data-reveal data-delay="2">
+        <div class="map" id="map">
+          <div class="map__ph">Cargá el mapa en app.js</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CTA FINAL ══════════════ -->
+<section class="cta">
+  <div class="cta__glow" aria-hidden="true"></div>
+  <div class="wrap cta__inner">
+    <h2 class="cta__title reveal" data-reveal>¿Te lo cortamos hoy?</h2>
+    <p class="cta__sub reveal" data-reveal data-delay="1">
+      Escribinos y te decimos la hora disponible. Sin formularios, sin esperas.
+    </p>
+    <a class="btn btn--gold btn--lg reveal" data-wa data-reveal data-delay="2">Reservar por WhatsApp</a>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ Footer ══ -->
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <div class="foot__brand">
+      <span class="brand__pole" aria-hidden="true"></span>
+      <div>
+        <strong data-bind="nombre">Barbería</strong>
+        <p data-slot="direccionFoot">Cargá la dirección en app.js</p>
+      </div>
+    </div>
+    <nav class="foot__nav" aria-label="Pie de página">
+      <a href="#servicios">Servicios</a>
+      <a href="#historia">Nosotros</a>
+      <a href="#resenas">Reseñas</a>
+      <a href="#visitanos">Visitanos</a>
+    </nav>
+    <p class="foot__copy">© <span id="year"></span> <span data-bind="nombre">Barbería</span> · <span data-slot="ciudad">Campana, Buenos Aires</span></p>
+  </div>
+</footer>
+
+<!-- ══ Botón flotante de WhatsApp ══ -->
+<a class="fab" id="fab" data-wa aria-label="Escribir por WhatsApp">
+  <span class="fab__ring" aria-hidden="true"></span>
+  <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+    <path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8c1.9 1 4 1.6 6.2 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3m0 23.8c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.1 1.1-3.9-.3-.4A10.7 10.7 0 0 1 5.3 16c0-5.9 4.8-10.8 10.7-10.8S27.4 10.1 27.4 16 21.9 26.8 16 26.8m5.8-8.1c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a8.7 8.7 0 0 1-2.5-1.6 9.4 9.4 0 0 1-1.8-2.2c-.2-.3 0-.5.1-.6l.6-.7.3-.6v-.6l-1-2.4c-.3-.6-.6-.5-.8-.5h-.7c-.2 0-.6.1-1 .5a4 4 0 0 0-1.3 3.2 6.9 6.9 0 0 0 1.5 3.7 15.7 15.7 0 0 0 6.1 5.4c2.2.9 3 .9 4.1.8a3.4 3.4 0 0 0 2.3-1.6 2.8 2.8 0 0 0 .2-1.6c-.1-.2-.3-.3-.6-.4"/>
+  </svg>
+</a>
+
+<script src="app.js"></script>
+</body>
+</html>
